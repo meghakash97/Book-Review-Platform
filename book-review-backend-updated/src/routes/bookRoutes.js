@@ -102,4 +102,21 @@ router.post('/:id/review', authMiddleware, async (req, res) => {
   }
 });
 
+
+// GET all books with optional filters
+router.get('/', authMiddleware, async (req, res) => {
+  try {
+    const { genre, author } = req.query;
+
+    const filter = {};
+    if (genre) filter.genre = genre;
+    if (author) filter.author = author;
+
+    const books = await Book.find(filter);
+    res.json(books);
+  } catch (err) {
+    res.status(500).json({ message: 'Server error', error: err.message });
+  }
+});
+
 module.exports = router;
